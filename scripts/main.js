@@ -14,10 +14,10 @@ let opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) 
 while (opcionElegida !== 0) {
     
 
-    if (opcionElegida == 1 && stockRemeras > 0){
+    if (opcionElegida === 1 && stockRemeras > 0){
         let cantidadRemerasElegidas = parseInt(prompt("Cuantas remeras desea comprar: (maximo: " + stockRemeras + ")"));
         
-        if (cantidadRemerasElegidas < stockRemeras) {
+        if (cantidadRemerasElegidas < stockRemeras && cantidadRemerasElegidas > 0) {
             stockRemeras -= cantidadRemerasElegidas;
             totalRemeras += cantidadRemerasElegidas * precioRemera;
             alert("Se agrego remeras al carrito");
@@ -28,7 +28,7 @@ while (opcionElegida !== 0) {
             opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
         }
     }
-    else if (opcionElegida == 2 && stockBuzos > 0){
+    else if (opcionElegida === 2 && stockBuzos > 0){
         let cantidadBuzosElegidos = parseInt(prompt("Cuantos buzos desea comprar: (maximo: " + stockBuzos + ")"));
 
         if (cantidadBuzosElegidos < stockBuzos){
@@ -42,7 +42,7 @@ while (opcionElegida !== 0) {
             opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
         }
     }
-    else if (opcionElegida == 3 && stockPantalones > 0){
+    else if (opcionElegida === 3 && stockPantalones > 0){
         let cantidadPantalonesElegidos = parseInt(prompt("Cuantos pantalones desea comprar: (maximo: " + stockPantalones + ")"));
 
         if (cantidadPantalonesElegidos < stockPantalones){
@@ -56,12 +56,12 @@ while (opcionElegida !== 0) {
             opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
         }
     }
-    else if (opcionElegida == 4){
+    else if (opcionElegida === 4){
         let totalCarrito = totalRemeras + totalBuzos + totalPantalones;
         alert("Su total es de: " + totalCarrito)
         break;
     }
-    else if (opcionElegida == 0){
+    else if (opcionElegida === 0){
         alert("Adios!");
         break;
     }
@@ -69,4 +69,12 @@ while (opcionElegida !== 0) {
         alert("No eligio una opcion correcta, vuelva a intentar...")
         opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
     }
+}
+
+do {
+
+
+}
+while (stockBuzos < 0){
+
 }
