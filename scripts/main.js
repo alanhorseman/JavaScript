@@ -1,80 +1,119 @@
-let stockRemeras = 10;
-let stockBuzos = 10;
-let stockPantalones = 10;
+class Producto {
+    constructor(nombre, stock, precioUnitario, precioTotal){
+        this.nombre = nombre;
+        this.stock = stock;
+        this.precioUnitario = precioUnitario;
+        this.precioTotal = precioTotal;
+    }
 
-const precioRemera = 15000;
-const precioBuzo = 32000;
-const precioPantalon = 23000;
-
-let totalRemeras = 0;
-let totalBuzos = 0;
-let totalPantalones = 0;
-
-let opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
-while (opcionElegida !== 0) {
-    
-
-    if (opcionElegida === 1 && stockRemeras > 0){
-        let cantidadRemerasElegidas = parseInt(prompt("Cuantas remeras desea comprar: (maximo: " + stockRemeras + ")"));
-        
-        if (cantidadRemerasElegidas < stockRemeras && cantidadRemerasElegidas > 0) {
-            stockRemeras -= cantidadRemerasElegidas;
-            totalRemeras += cantidadRemerasElegidas * precioRemera;
-            alert("Se agrego remeras al carrito");
-            opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
-        }
-        else {
-            alert("No hay tantas remeras en stock. (maximo: " + stockRemeras + ")");
-            opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
+    static verProductos(listaDeProductos) {
+        if (listaDeProductos.length === 0) {
+            alert("Lista vacia");
+        } else {
+            console.table(listaDeProductos);
         }
     }
-    else if (opcionElegida === 2 && stockBuzos > 0){
-        let cantidadBuzosElegidos = parseInt(prompt("Cuantos buzos desea comprar: (maximo: " + stockBuzos + ")"));
+    static agregarProducto(listaDeProductos){
+        const nombreProducto = prompt("Nombre del producto: ").toLowerCase();
 
-        if (cantidadBuzosElegidos < stockBuzos){
-            stockBuzos -= cantidadBuzosElegidos;
-            totalBuzos += cantidadBuzosElegidos * precioBuzo;
-            alert("Se agrego buzos al carrito");
-            opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
+        const stockProducto = parseInt(prompt(`Stock de ${nombreProducto}`));
+        if (isNaN(stockProducto) || stockProducto < 0){
+            alert("Stock invalido");
+            return;
         }
-        else {
-            alert ("No hay tantos buzos en stock. (maximo: )" + stockBuzos + ")")
-            opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
+        const precioUnitario = parseFloat(prompt("Precio Unitario: "));
+        if (isNaN(precioUnitario) || precioUnitario < 0){
+            alert("Precio invalido");
+            return;
         }
-    }
-    else if (opcionElegida === 3 && stockPantalones > 0){
-        let cantidadPantalonesElegidos = parseInt(prompt("Cuantos pantalones desea comprar: (maximo: " + stockPantalones + ")"));
+        const precioTotal = precioUnitario + (precioUnitario * 0.25);
 
-        if (cantidadPantalonesElegidos < stockPantalones){
-            stockPantalones -= cantidadPantalonesElegidos;
-            totalPantalones += cantidadPantalonesElegidos * precioPantalon;
-            alert("Se agrego pantalones al carrito");
-            opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
+        const nuevoProducto = new Producto (nombreProducto, stockProducto, precioUnitario, precioTotal);
+        listaDeProductos.push(nuevoProducto);
+        alert("Producto agregado exitosamente")
+    }
+    static verificarExistencia(index){
+        return index !== -1;
+    }
+    static quitaProducto(listaDeProductos){
+        const productoAEliminar = prompt("Que producto desea eliminar?").toLowerCase();
+        let index = listaDeProductos.findIndex(producto => producto.nombre === productoAEliminar);
+        if(this.verificarExistencia(index)){
+            listaDeProductos.splice(index, 1);
+            alert(`Se borro el producto: ${productoAEliminar}`);
+        } else {
+            alert("Este producto no existe.")
         }
-        else {
-            alert("No hay tantos pantalones en stock. (maximo: )" + stockPantalones + ")")
-            opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
+    }
+    static modificarProducto(listaDeProductos){
+        const productoAModificar = prompt("Que producto desea modificar?").toLowerCase();
+        let index = listaDeProductos.findIndex(producto => producto.nombre === productoAModificar);
+        if(this.verificarExistencia(index)){
+            let nuevoStock = parseInt(prompt(`Stock de ${productoAModificar}: (Stock actual: ${listaDeProductos[index].stock})`));
+            if(isNaN(nuevoStock) || nuevoStock < 0){
+                alert("Stock ingresado invalido");
+                return;
+            } else {
+                listaDeProductos[index].stock = nuevoStock;
+            }
+            let nuevoPrecio = parseFloat(prompt(`Precio de ${productoAModificar}: (Precio actual: $${listaDeProductos[index].precioUnitario})`));
+            if (isNaN(nuevoPrecio) || nuevoPrecio < 0){
+                alert("Precio ingresado invalido");
+                return;
+            } else {
+                listaDeProductos[index].precioUnitario = nuevoPrecio;
+            }
+        } else { alert("No se encontro producto.")}
+    }
+    static filtrarProductos(listaDeProductos){
+        let opcionesFiltro = parseInt(prompt("Desea filtrar por: (1: Precio) (2: Stock)"));
+        if (opcionesFiltro == 1){
+            let precioFiltrar = parseFloat(prompt("Ingrese el precio a filtrar: (Ej: 5000)"));
+            let mayorMenor = parseInt(prompt(`Filtrar productos por precio:
+                                                1: Mayor 0 igual a ${precioFiltrar}
+                                                2: Menor a ${precioFiltrar}`));
+            if (mayorMenor == 1) {
+                console.table(listaDeProductos.filter((prod) => prod.precioUnitario >= precioFiltrar));
+            } else if (mayorMenor == 2) {
+                console.table(listaDeProductos.filter((prod) => prod.precioUnitario < precioFiltrar));
+            } else {alert("Numero incorrecto")}
+        } else if ( opcionesFiltro == 2) {
+            let stockFiltrar = parseInt(prompt("Ingrese el stock a filtrar: (Ej: 50)"));
+            let mayorMenor = parseInt(prompt(`Filtrar productos por stock:
+                1: Mayor 0 igual a ${stockFiltrar}
+                2: Menor a ${stockFiltrar}`));
+            if (mayorMenor == 1) {
+                console.table(listaDeProductos.filter((prod) => prod.stock >= stockFiltrar));
+            } else if (mayorMenor == 2) {
+                console.table(listaDeProductos.filter((prod) => prod.stock < stockFiltrar));
+            } else {alert("Numero incorrecto")}
         }
-    }
-    else if (opcionElegida === 4){
-        let totalCarrito = totalRemeras + totalBuzos + totalPantalones;
-        alert("Su total es de: " + totalCarrito)
-        break;
-    }
-    else if (opcionElegida === 0){
-        alert("Adios!");
-        break;
-    }
-    else {
-        alert("No eligio una opcion correcta, vuelva a intentar...")
-        opcionElegida = parseInt(prompt("Que desea comprar: (1: Remeras) (2: Buzos) (3: Pantalones) (4: Total) (0: Salir)"));
+
     }
 }
+const listaDeProductos = []
+
+let respuesta;
 
 do {
+    respuesta = parseInt(prompt("Que operacion desea realizar: (1-Ver productos) (2-Agregar producto) (3-Quitar producto) (4-Modificar producto) (5-Filtrar productos) (0-Salir)"));
 
-
+    switch(respuesta){
+        case 1:
+            Producto.verProductos(listaDeProductos);
+            break;
+        case 2:
+            Producto.agregarProducto(listaDeProductos);
+            break;
+        case 3:
+            Producto.quitaProducto(listaDeProductos);
+            break;
+        case 4:
+            Producto.modificarProducto(listaDeProductos);
+            break;
+        case 5:
+            Producto.filtrarProductos(listaDeProductos);
+            break;
+    }
 }
-while (stockBuzos < 0){
-
-}
+while (respuesta !== 0);
